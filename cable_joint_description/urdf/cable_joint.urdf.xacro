@@ -1,55 +1,64 @@
 <?xml version="1.0" ?>
 
 <robot name="cable_joint" xmlns:xacro="https://www.ros.org/wiki/xacro" >
-    
-  <!-- Constants for robot dimensions -->
-  <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="body_length" value="0.02" /> <!-- Size of square 'camera' box -->
 
-  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
-  <xacro:include filename="$(find cable_joint_description)/urdf/cable_joint.gazebo.xacro" />
-  <!-- Import Rviz colors -->
-  <xacro:include filename="$(find cable_joint_description)/urdf/materials.xacro" />
+    <!-- Constants for robot dimensions -->
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <!-- properties of link_base -->
+    <xacro:property name="R_BASE" value="0.1"/>
+    <xacro:property name="L_BASE" value="0.02"/>
+    <xacro:property name="M_BASE" value="1000"/>
+    <!-- properties of link_base -->
+    <xacro:property name="R_BASE" value="0.1"/>
+    <xacro:property name="L_BASE" value="0.02"/>
+    <xacro:property name="M_BASE" value="1000"/>
 
-  <!-- Used for fixing robot to Gazebo 'base_link' -->
-  <link name="world"/>
+    <xacro:property name="body_length" value="0.02" /> <!-- Size of square 'camera' box -->
 
-  <joint name="joint_world_base" type="revolute">
+    <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+    <xacro:include filename="$(find cable_joint_description)/urdf/cable_joint.gazebo.xacro" />
+    <!-- Import Rviz colors -->
+    <xacro:include filename="$(find cable_joint_description)/urdf/materials.xacro" />
+
+    <!-- Used for fixing robot to Gazebo 'base_link' -->
+    <link name="world"/>
+
+    <!-- <joint name="joint_world_base" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world"/>
     <child link="link_base"/>
     <limit effort="0" lower="0" upper="0" velocity="0"/>
     <axis rpy="0 0 0" xyz="0 0 1"/>
-  </joint>
+    </joint> -->
 
-  <link name="link_base">
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.02" radius="0.1"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.02" radius="0.1"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    <inertial>
-      <mass value="1000"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="2.533" ixy="0" ixz="0" iyy="2.533" iyz="0" izz="5.236"/>
-    </inertial>
-  </link>
+    <link name="link_base">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="{L_BASE}" radius="${R_BASE}"/>
+            </geometry>
+        <material name="black"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_BASE}" radius="${R_BASE}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1000"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_BASE*(3*R_HAT*R_HAT+L_HAT*L_HAT)}" ixy="0" ixz="0" iyy="${1/12*M_BASE*(3*R_HAT*R_HAT+L_HAT*L_HAT)}" iyz="0" izz="${1/2*M_BASE*R_HAT*R_HAT}"/>
+        </inertial>
+    </link>
 
-  <joint name="joint_world_camerabody" type="revolute">
+    <joint name="joint_world_camerabody" type="revolute">
     <origin rpy="0 0 ${PI/2}" xyz="0 -0.5 ${body_length/2}"/>
     <parent link="world"/>
     <child link="link_camera_body"/>
     <limit effort="0" lower="0" upper="0" velocity="0"/>
     <axis rpy="0 0 0" xyz="0 0 1"/>
-  </joint>
+    </joint>
 
   <link name="link_camera_body">
     <collision>
@@ -461,4 +470,3 @@
   </link>
 
 </robot>
-
