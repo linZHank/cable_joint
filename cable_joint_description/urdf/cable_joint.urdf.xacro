@@ -15,6 +15,17 @@
     <!-- properties of link_camera_body -->
     <xacro:property name="L_CAMBODY" value="0.02"/>
     <xacro:property name="M_CAMBODY" value="0.1"/>
+    <!-- properties of link_lens_body -->
+    <xacro:property name="R_LENS" value="0.02"/>
+    <xacro:property name="L_LENS" value="0.002"/>
+    <xacro:property name="M_LENS" value="0.01"/>
+    <!-- properties of link_pin's -->
+    <xacro:property name="R_PIN" value="0.02"/>
+    <xacro:property name="M_PIN" value="1"/>
+    <!-- properties of link_lowerSupport -->
+    <xacro:property name="R_LOWSUPPORT" value="0.015"/>
+    <xacro:property name="L_LOWSUPPORT" value="0.14"/>
+    <xacro:property name="M_LOWSUPPORT" value="10"/>
 
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
@@ -77,6 +88,131 @@
             <mass value="${M_CAMBODY}"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <inertia ixx="${1/12*M_CAMBODY*(L_CAMBODY*L_CAMBODY*4+L_CAMBODY*L_CAMBODY*4)}" ixy="0" ixz="0" iyy="${1/12*M_CAMBODY*(L_CAMBODY*L_CAMBODY+L_CAMBODY*L_CAMBODY*4)}" iyz="0" izz="${1/12*M_CAMBODY*(L_CAMBODY*L_CAMBODY*4+L_CAMBODY*L_CAMBODY)}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_camerabody_lens" type="revolute">
+        <origin rpy="0 ${PI/2} 0" xyz="${L_CAMBODY/2+L_LENS/2} 0 0"/>
+        <parent link="link_camera_body"/>
+        <child link="link_lens"/>
+        <limit effort="0" lower="0" upper="0" velocity="0"/>
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_lens">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_LENS}" radius="${R_LENS}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_LENS}" radius="${R_LENS}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_LENS}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_LENS*(3*R_LENS*R_LENS+L_LENS*L_LENS)}" ixy="0" ixz="0" iyy="${1/12*M_LENS*(3*R_LENS*R_LENS+L_LENS*L_LENS)}" iyz="0" izz="${1/2*M_LENS*R_LENS*R_LENS}"/>
+        </inertial>
+    </link>
+    <!-- camera needs to be rotated coreectly -->
+    <joint name="camera_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-PI/2} ${-PI/2} ${PI/2}"/>
+      <parent link="link_lens"/>
+      <child link="link_optical"/>
+    </joint>
+    <link name="link_optical">
+    </link>
+
+    <joint name="joint_base_eastpin" type="revolute">
+        <parent link="link_base"/>
+        <child link="link_eastPin"/>
+        <origin rpy="0 0 0" xyz="${R_BASE} 0 ${L_BASE/2}"/>
+        <limit effort="0" lower="0" upper="0" velocity="0"/>
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_eastPin">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="${R_PIN}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="${R_PIN}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_PIN}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${2/5*M_PIN*R_PIN*R_PIN}" ixy="0" ixz="0" iyy="${2/5*M_PIN*R_PIN*R_PIN}" iyz="0" izz="${2/5*M_PIN*R_PIN*R_PIN}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_base_westpin" type="revolute">
+        <parent link="link_base"/>
+        <child link="link_westPin"/>
+        <origin rpy="0 0 0" xyz="${-R_BASE} 0 ${L_BASE/2}"/>
+        <limit effort="0" lower="0" upper="0" velocity="0"/>
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_westPin">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="${R_PIN}"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="${R_PIN}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_PIN}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${2/5*M_PIN*R_PIN*R_PIN}" ixy="0" ixz="0" iyy="${2/5*M_PIN*R_PIN*R_PIN}" iyz="0" izz="${2/5*M_PIN*R_PIN*R_PIN}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_base_lowersupport" type="revolute">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <limit effort="0" lower="0" upper="0" velocity="0"/>
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+        <parent link="link_base"/>
+        <child link="link_lowerSupport"/>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+    </joint>
+
+    <link name="link_lowerSupport">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0.07"/>
+            <geometry>
+                <cylinder length="${L_LOWSUPPORT}" radius="${R_LOWSUPPORT}"/>
+            </geometry>
+            <material name="grey"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0.07"/>
+            <geometry>
+                <cylinder length="${L_LOWSUPPORT}" radius="${R_LOWSUPPORT}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_LOWSUPPORT}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_LOWSUPPORT*(3*R_LOWSUPPORT*R_LOWSUPPORT+L_LOWSUPPORT*L_LOWSUPPORT)}" ixy="0" ixz="0" iyy="${1/12*M_LOWSUPPORT*(3*R_LOWSUPPORT*R_LOWSUPPORT+L_LOWSUPPORT*L_LOWSUPPORT)}" iyz="0" izz="${1/2*M_LOWSUPPORT*R_LOWSUPPORT*R_LOWSUPPORT}"/>
         </inertial>
     </link>
 
