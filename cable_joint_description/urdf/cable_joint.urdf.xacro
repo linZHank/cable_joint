@@ -7,11 +7,7 @@
     <!-- properties of link_base -->
     <xacro:property name="R_BASE" value="0.1"/>
     <xacro:property name="L_BASE" value="0.02"/>
-    <xacro:property name="M_BASE" value="1000"/>
-    <!-- properties of link_base -->
-    <xacro:property name="R_BASE" value="0.1"/>
-    <xacro:property name="L_BASE" value="0.02"/>
-    <xacro:property name="M_BASE" value="1000"/>
+    <xacro:property name="M_BASE" value="10"/>
     <!-- properties of link_camera_body -->
     <xacro:property name="L_CAMBODY" value="0.02"/>
     <xacro:property name="M_CAMBODY" value="0.1"/>
@@ -25,7 +21,12 @@
     <!-- properties of link_lowerSupport -->
     <xacro:property name="R_LOWSUPPORT" value="0.015"/>
     <xacro:property name="L_LOWSUPPORT" value="0.14"/>
-    <xacro:property name="M_LOWSUPPORT" value="10"/>
+    <xacro:property name="M_LOWSUPPORT" value="1"/>
+    <!-- properties of link_hiddenRod -->
+    <xacro:property name="R_LOWSUPPORT" value="0.000001"/>
+    <xacro:property name="L_LOWSUPPORT" value="0.000004"/>
+    <xacro:property name="M_LOWSUPPORT" value="0.00001"/>
+
 
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
@@ -215,5 +216,35 @@
             <inertia ixx="${1/12*M_LOWSUPPORT*(3*R_LOWSUPPORT*R_LOWSUPPORT+L_LOWSUPPORT*L_LOWSUPPORT)}" ixy="0" ixz="0" iyy="${1/12*M_LOWSUPPORT*(3*R_LOWSUPPORT*R_LOWSUPPORT+L_LOWSUPPORT*L_LOWSUPPORT)}" iyz="0" izz="${1/2*M_LOWSUPPORT*R_LOWSUPPORT*R_LOWSUPPORT}"/>
         </inertial>
     </link>
+
+    <joint name="joint_lowersupport_hiddenballroll" type="revolute">
+        <parent link="link_lower_support"/>
+        <child link="link_hiddenBallRoll"/>
+        <origin rpy="0 0 0" xyz="0 0 0.14"/>
+        <axis xyz="1 0 0"/>
+        <limit effort="10" velocity="${PI*2}" lower="${-4*PI/9}" upper="${4*PI/9}"/>
+    </joint>
+
+    <link name="link_hiddenBallRoll">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="0.00001"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="0.00001"/>
+            </geometry>
+        </collision>
+                <inertial>
+            <mass value="0.1"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="1e-8" ixy="0" ixz="0" iyy="1e-8" iyz="0" izz="1e-8"/>
+        </inertial>
+    </link>
+
 
 </robot>
