@@ -4,6 +4,7 @@
 
     <!-- Constants for robot dimensions -->
     <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="EPSILON" value="1e-8"/>
     <!-- properties of link_base -->
     <xacro:property name="R_BASE" value="0.1"/>
     <xacro:property name="L_BASE" value="0.02"/>
@@ -22,11 +23,13 @@
     <xacro:property name="R_LOWSUPPORT" value="0.015"/>
     <xacro:property name="L_LOWSUPPORT" value="0.14"/>
     <xacro:property name="M_LOWSUPPORT" value="1"/>
-    <!-- properties of link_hiddenRod -->
-    <xacro:property name="R_LOWSUPPORT" value="0.000001"/>
-    <xacro:property name="L_LOWSUPPORT" value="0.000004"/>
-    <xacro:property name="M_LOWSUPPORT" value="0.00001"/>
-
+    <!-- properties of link_hiddenLink -->
+    <xacro:property name="R_HIDLINK" value="0.000001"/>
+    <xacro:property name="L_HIDLINK" value="0.000004"/>
+    <xacro:property name="M_HIDLINK" value="0.00001"/>
+    <!-- properties of link_ball -->
+    <xacro:property name="R_BALL" value="0.04"/>
+    <xacro:property name="M_BALL" value="1"/>
 
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
@@ -217,32 +220,90 @@
         </inertial>
     </link>
 
-    <joint name="joint_lowersupport_hiddenballroll" type="revolute">
-        <parent link="link_lower_support"/>
-        <child link="link_hiddenBallRoll"/>
-        <origin rpy="0 0 0" xyz="0 0 0.14"/>
+    <joint name="joint_lowersupport_hiddenlinkroll" type="revolute">
+        <parent link="link_lowerSupport"/>
+        <child link="link_hiddenLinkRoll"/>
+        <origin rpy="0 0 0" xyz="0 0 ${L_LOWSUPPORT}"/>
         <axis xyz="1 0 0"/>
-        <limit effort="10" velocity="${PI*2}" lower="${-4*PI/9}" upper="${4*PI/9}"/>
+        <limit effort="10" velocity="${PI*2}" lower="${-PI+EPSILON}" upper="${PI-EPSILON}"/>
     </joint>
 
-    <link name="link_hiddenBallRoll">
+    <link name="link_hiddenLinkRoll">
         <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="${PI/2} 0 0" xyz="0 0 0"/>
             <geometry>
-                <sphere radius="0.00001"/>
+                <cylinder length="${L_HIDLINK}" radius="${R_HIDLINK}"/>
             </geometry>
             <material name="white"/>
         </visual>
         <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="${PI/2} 0 0" xyz="0 0 0"/>
             <geometry>
-                <sphere radius="0.00001"/>
+                <cylinder length="${L_HIDLINK}" radius="${R_HIDLINK}"/>
             </geometry>
         </collision>
-                <inertial>
-            <mass value="0.1"/>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <inertia ixx="1e-8" ixy="0" ixz="0" iyy="1e-8" iyz="0" izz="1e-8"/>
+        <inertial>
+            <mass value="${M_HIDLINK}"/>
+            <origin rpy="${PI/2} 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_HIDLINK*(3*R_HIDLINK*R_HIDLINK+L_HIDLINK*L_HIDLINK)}" ixy="0" ixz="0" iyy="${1/12*M_HIDLINK*(3*R_HIDLINK*R_HIDLINK+L_HIDLINK*L_HIDLINK)}" iyz="0" izz="${1/2*M_HIDLINK*R_HIDLINK*R_HIDLINK}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_hiddenlinkroll_hiddenlinkpitch" type="revolute">
+        <parent link="link_hiddenLinkRoll"/>
+        <child link="link_hiddenLinkPitch"/>
+        <origin rpy="0 0 0" xyz="0 0 ${R_HIDLINK}"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="10" velocity="${PI*2}" lower="${-PI+EPSILON}" upper="${PI-EPSILON}"/>
+    </joint>
+
+    <link name="link_hiddenLinkPitch">
+        <visual>
+            <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_HIDLINK}" radius="${R_HIDLINK}"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_HIDLINK}" radius="${R_HIDLINK}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_HIDLINK}"/>
+            <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_HIDLINK*(3*R_HIDLINK*R_HIDLINK+L_HIDLINK*L_HIDLINK)}" ixy="0" ixz="0" iyy="${1/12*M_HIDLINK*(3*R_HIDLINK*R_HIDLINK+L_HIDLINK*L_HIDLINK)}" iyz="0" izz="${1/2*M_HIDLINK*R_HIDLINK*R_HIDLINK}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_hiddenlinkpitch_ball" type="revolute">
+        <parent link="link_hiddenLinkPitch"/>
+        <child link="link_ball"/>
+        <origin rpy="0 0 0" xyz="0 0 ${R_HIDLINK}"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="${PI*2}" lower="${-PI+EPSILON}" upper="${PI-EPSILON}"/>
+    </joint>
+
+    <link name="link_ball">
+        <visual>
+            <origin rpy="0 0 ${PI/2}" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="${R_BALL}"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 ${PI/2}" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="${R_BALL}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_BALL}"/>
+            <origin rpy="0 0 ${PI/2}" xyz="0 0 0"/>
+            <inertia ixx="${2/5*M_BALL*R_BALL*R_BALL}" ixy="0" ixz="0" iyy="${2/5*M_BALL*R_BALL*R_BALL}" iyz="0" izz="${2/5*M_BALL*R_BALL*R_BALL}"/>
         </inertial>
     </link>
 
