@@ -43,29 +43,29 @@
 
   <gazebo>
     <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
-      <bodyName>link_cube_northeast</bodyName>
-      <topicName>/force_northeast</topicName>
+      <bodyName>link_northeastCube</bodyName>
+      <topicName>/force_ne</topicName>
     </plugin>
     <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
-      <bodyName>link_cube_northwest</bodyName>
-      <topicName>/force_northwest</topicName>
+      <bodyName>link_northwestCube</bodyName>
+      <topicName>/force_nw</topicName>
     </plugin>
     <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
-      <bodyName>link_cube_southeast</bodyName>
-      <topicName>/force_southeast</topicName>
+      <bodyName>link_southeastCube</bodyName>
+      <topicName>/force_se</topicName>
     </plugin>
     <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
-      <bodyName>link_cube_southwest</bodyName>
-      <topicName>/force_southwest</topicName>
+      <bodyName>link_southwestCube</bodyName>
+      <topicName>/force_sw</topicName>
     </plugin>
   </gazebo>
-  
+
 
   <gazebo reference="link_lens">
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="link_camera_body">
+  <gazebo reference="link_cameraBody">
     <material>Gazebo/Red</material>
   </gazebo>
 
@@ -73,31 +73,31 @@
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="link_lower_support">
+  <gazebo reference="link_lowerSupport">
     <material>Gazebo/DarkGrey</material>
   </gazebo>
 
-  <gazebo reference="link_pin_west">
+  <gazebo reference="link_westPin">
     <material>Gazebo/Yellow</material>
   </gazebo>
 
-  <gazebo reference="link_pin_east">
+  <gazebo reference="link_eastPin">
     <material>Gazebo/Blue</material>
   </gazebo>
-  
-  <gazebo reference="link_ball_roll">
+
+  <gazebo reference="link_hiddenLinkRoll">
     <material>Gazebo/White</material>
   </gazebo>
 
-  <gazebo reference="link_ball_pitch">
+  <gazebo reference="link_hiddenLinkPitch">
     <material>Gazebo/White</material>
   </gazebo>
 
-  <gazebo reference="link_ball_yaw">
+  <gazebo reference="link_ball">
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <gazebo reference="link_upper_support">
+  <gazebo reference="link_upperSupport">
     <material>Gazebo/DarkGrey</material>
   </gazebo>
 
@@ -105,19 +105,19 @@
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <gazebo reference="link_cube_northeast">
+  <gazebo reference="link_northeastCube">
     <material>Gazebo/Turquoise</material>
   </gazebo>
 
-  <gazebo reference="link_cube_northwest">
+  <gazebo reference="link_northwestCube">
     <material>Gazebo/Gold</material>
   </gazebo>
 
-  <gazebo reference="link_cube_southwest">
+  <gazebo reference="link_southwestCube">
     <material>Gazebo/Orange</material>
   </gazebo>
 
-  <gazebo reference="link_cube_southeast">
+  <gazebo reference="link_southeastCube">
     <material>Gazebo/Indigo</material>
   </gazebo>
 

@@ -38,7 +38,7 @@
     <xacro:property name="R_DISC" value="0.1"/>
     <xacro:property name="L_DISC" value="0.02"/>
     <xacro:property name="M_DISC" value="0.1"/>
-    <!-- properties of link_camera_body -->
+    <!-- properties of link_cube's -->
     <xacro:property name="L_CUBE" value="0.02"/>
     <xacro:property name="M_CUBE" value="0.001"/>
 
@@ -80,12 +80,12 @@
     <joint name="joint_world_camerabody" type="revolute">
         <origin rpy="0 0 ${PI/2}" xyz="0 -0.5 ${L_CAMBODY/2}"/>
         <parent link="world"/>
-        <child link="link_camera_body"/>
+        <child link="link_cameraBody"/>
         <limit effort="0" lower="0" upper="0" velocity="0"/>
         <axis rpy="0 0 0" xyz="0 0 1"/>
     </joint>
 
-    <link name="link_camera_body">
+    <link name="link_cameraBody">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -108,7 +108,7 @@
 
     <joint name="joint_camerabody_lens" type="revolute">
         <origin rpy="0 ${PI/2} 0" xyz="${L_CAMBODY/2+L_LENS/2} 0 0"/>
-        <parent link="link_camera_body"/>
+        <parent link="link_cameraBody"/>
         <child link="link_lens"/>
         <limit effort="0" lower="0" upper="0" velocity="0"/>
         <axis rpy="0 0 0" xyz="0 0 1"/>
