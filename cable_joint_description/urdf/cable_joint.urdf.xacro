@@ -30,11 +30,17 @@
     <!-- properties of link_ball -->
     <xacro:property name="R_BALL" value="0.04"/>
     <xacro:property name="M_BALL" value="1"/>
-    <!-- properties of link_lowerSupport -->
+    <!-- properties of link_upperSupport -->
     <xacro:property name="R_UPPSUPPORT" value="0.01"/>
     <xacro:property name="L_UPPSUPPORT" value="0.08"/>
     <xacro:property name="M_UPPSUPPORT" value="0.1"/>
-
+    <!-- properties of link_disc -->
+    <xacro:property name="R_DISC" value="0.1"/>
+    <xacro:property name="L_DISC" value="0.02"/>
+    <xacro:property name="M_DISC" value="0.1"/>
+    <!-- properties of link_camera_body -->
+    <xacro:property name="L_CUBE" value="0.02"/>
+    <xacro:property name="M_CUBE" value="0.001"/>
 
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
@@ -335,9 +341,154 @@
         </geometry>
     </collision>
     <inertial>
-        <mass value="1e-5"/>
+        <mass value="${M_UPPSUPPORT}"/>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <inertia ixx="${1/12*M_UPPSUPPORT*(3*R_UPPSUPPORT*R_UPPSUPPORT+L_UPPSUPPORT*L_UPPSUPPORT)}" ixy="0" ixz="0" iyy="${1/12*M_UPPSUPPORT*(3*R_UPPSUPPORT*R_UPPSUPPORT+L_UPPSUPPORT*L_UPPSUPPORT)}" iyz="0" izz="${1/2*M_UPPSUPPORT*R_UPPSUPPORT*R_UPPSUPPORT}"/>
+      </inertial>
+    </link>
+
+    <joint name="joint_uppersupport_disc" type="revolute">
+          <origin rpy="0 0 0" xyz="0 0 ${L_UPPSUPPORT/2}"/>
+          <limit effort="0" lower="0" upper="0" velocity="0"/>
+          <axis xyz="0 0 1"/>
+          <parent link="link_upperSupport"/>
+          <child link="link_disc"/>
+    </joint>
+
+    <link name="link_disc">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_DISC}" radius="${R_DISC}"/>
+              </geometry>
+              <material name="white"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_DISC}" radius="${R_DISC}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_DISC}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_DISC*(3*R_DISC*R_DISC+L_DISC*L_DISC)}" ixy="0" ixz="0" iyy="${1/12*M_DISC*(3*R_DISC*R_DISC+L_DISC*L_DISC)}" iyz="0" izz="${1/2*M_DISC*R_DISC*R_DISC}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_disc_necube" type="revolute">
+          <parent link="link_disc"/>
+          <child link="link_northeastCube"/>
+          <origin rpy="0 0 0" xyz="0.0707 0.0707 0"/>
+          <limit effort="0" lower="0" upper="0" velocity="0"/>
+          <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_northeastCube">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}" />
+            </geometry>
+            <material name="purple"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_CUBE}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" ixy="0" ixz="0" iyy="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" iyz="0" izz="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}"/>
+      </inertial>
+    </link>
+
+    <joint name="joint_disc_nwcube" type="revolute">
+          <parent link="link_disc"/>
+          <child link="link_northwestCube"/>
+          <origin rpy="0 0 0" xyz="-0.0707 0.0707 0"/>
+          <limit effort="0" lower="0" upper="0" velocity="0"/>
+          <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_northwestCube">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}" />
+            </geometry>
+            <material name="seance"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_CUBE}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" ixy="0" ixz="0" iyy="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" iyz="0" izz="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}"/>
+      </inertial>
+    </link>
+
+    <joint name="joint_disc_swcube" type="revolute">
+          <parent link="link_disc"/>
+          <child link="link_southwestCube"/>
+          <origin rpy="0 0 0" xyz="-0.0707 -0.0707 0"/>
+          <limit effort="0" lower="0" upper="0" velocity="0"/>
+          <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_southwestCube">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}" />
+            </geometry>
+            <material name="orange"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_CUBE}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" ixy="0" ixz="0" iyy="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" iyz="0" izz="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}"/>
+      </inertial>
+    </link>
+
+    <joint name="joint_disc_secube" type="revolute">
+          <parent link="link_disc"/>
+          <child link="link_southeastCube"/>
+          <origin rpy="0 0 0" xyz="0.0707 -0.0707 0"/>
+          <limit effort="0" lower="0" upper="0" velocity="0"/>
+          <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_southeastCube">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}" />
+            </geometry>
+            <material name="sky"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CUBE} ${L_CUBE} ${L_CUBE}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_CUBE}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" ixy="0" ixz="0" iyy="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}" iyz="0" izz="${1/12*M_CUBE*(L_CUBE*L_CUBE+L_CUBE*L_CUBE)}"/>
       </inertial>
     </link>
 
