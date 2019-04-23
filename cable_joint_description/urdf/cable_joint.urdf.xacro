@@ -30,6 +30,11 @@
     <!-- properties of link_ball -->
     <xacro:property name="R_BALL" value="0.04"/>
     <xacro:property name="M_BALL" value="1"/>
+    <!-- properties of link_lowerSupport -->
+    <xacro:property name="R_UPPSUPPORT" value="0.01"/>
+    <xacro:property name="L_UPPSUPPORT" value="0.08"/>
+    <xacro:property name="M_UPPSUPPORT" value="0.1"/>
+
 
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
@@ -306,6 +311,36 @@
             <inertia ixx="${2/5*M_BALL*R_BALL*R_BALL}" ixy="0" ixz="0" iyy="${2/5*M_BALL*R_BALL*R_BALL}" iyz="0" izz="${2/5*M_BALL*R_BALL*R_BALL}"/>
         </inertial>
     </link>
+
+    <joint name="joint_ball_uppersupport" type="revolute">
+          <origin rpy="0 0 0" xyz="0 0 ${R_BALL}"/>
+          <limit effort="0" lower="0" upper="0" velocity="0"/>
+          <axis xyz="0 0 1"/>
+          <parent link="link_ball"/>
+          <child link="link_upperSupport"/>
+    </joint>
+
+    <link name="link_upperSupport">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_UPPSUPPORT}" radius="${R_UPPSUPPORT}"/>
+            </geometry>
+            <material name="grey"/>
+        </visual>
+    <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+            <cylinder length="${L_UPPSUPPORT}" radius="${R_UPPSUPPORT}"/>
+        </geometry>
+    </collision>
+    <inertial>
+        <mass value="1e-5"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <inertia ixx="${1/12*M_UPPSUPPORT*(3*R_UPPSUPPORT*R_UPPSUPPORT+L_UPPSUPPORT*L_UPPSUPPORT)}" ixy="0" ixz="0" iyy="${1/12*M_UPPSUPPORT*(3*R_UPPSUPPORT*R_UPPSUPPORT+L_UPPSUPPORT*L_UPPSUPPORT)}" iyz="0" izz="${1/2*M_UPPSUPPORT*R_UPPSUPPORT*R_UPPSUPPORT}"/>
+      </inertial>
+    </link>
+
 
 
 </robot>
