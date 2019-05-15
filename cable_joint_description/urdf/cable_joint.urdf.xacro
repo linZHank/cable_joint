@@ -78,7 +78,7 @@
     </link>
 
     <joint name="joint_world_soucambody" type="revolute">
-        <origin rpy="0 0 ${PI/2}" xyz="0 -0.5 ${L_CAMBODY/2}"/>
+        <origin rpy="0 0 0" xyz="0 -0.5 ${L_CAMBODY}"/>
         <parent link="world"/>
         <child link="link_southCameraBody"/>
         <limit effort="0" lower="0" upper="0" velocity="0"/>
@@ -86,6 +86,72 @@
     </joint>
 
     <link name="link_southCameraBody">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CAMBODY*2} ${L_CAMBODY} ${L_CAMBODY*2}"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${L_CAMBODY*2} ${L_CAMBODY} ${L_CAMBODY*2}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_CAMBODY}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_CAMBODY*(L_CAMBODY*L_CAMBODY+L_CAMBODY*L_CAMBODY*4)}" ixy="0" ixz="0" iyy="${1/12*M_CAMBODY*(L_CAMBODY*L_CAMBODY*4+L_CAMBODY*L_CAMBODY*4)}" iyz="0" izz="${1/12*M_CAMBODY*(L_CAMBODY*L_CAMBODY*4+L_CAMBODY*L_CAMBODY)}"/>
+        </inertial>
+    </link>
+
+    <joint name="joint_soucambody_soulens" type="revolute">
+        <origin rpy="0 0 0" xyz="0 ${L_CAMBODY/2+L_LENS/2} 0"/>
+        <parent link="link_southCameraBody"/>
+        <child link="link_southLens"/>
+        <limit effort="0" lower="0" upper="0" velocity="0"/>
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_southLens">
+        <visual>
+            <origin rpy="${PI/2} 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_LENS}" radius="${R_LENS}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin rpy="${PI/2} 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="${L_LENS}" radius="${R_LENS}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${M_LENS}"/>
+            <origin rpy="${PI/2} 0 0" xyz="0 0 0"/>
+            <inertia ixx="${1/12*M_LENS*(3*R_LENS*R_LENS+L_LENS*L_LENS)}" ixy="0" ixz="0" iyy="${1/12*M_LENS*(3*R_LENS*R_LENS+L_LENS*L_LENS)}" iyz="0" izz="${1/2*M_LENS*R_LENS*R_LENS}"/>
+        </inertial>
+    </link>
+    <!-- rotate optical link, x axis should be pointing to the view-->
+    <joint name="joint_soulens_souopt" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
+      <parent link="link_southLens"/>
+      <child link="link_southOptical"/>
+    </joint>
+    <link name="link_southOptical">
+    </link>
+
+    <joint name="joint_world_wescambody" type="revolute">
+        <origin rpy="0 0 0" xyz="-0.5 0 ${L_CAMBODY}"/>
+        <parent link="world"/>
+        <child link="link_westCameraBody"/>
+        <limit effort="0" lower="0" upper="0" velocity="0"/>
+        <axis rpy="0 0 0" xyz="0 0 1"/>
+    </joint>
+
+    <link name="link_westCameraBody">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -106,41 +172,41 @@
         </inertial>
     </link>
 
-    <joint name="joint_soucambody_soulens" type="revolute">
-        <origin rpy="0 ${PI/2} 0" xyz="${L_CAMBODY/2+L_LENS/2} 0 0"/>
-        <parent link="link_southCameraBody"/>
-        <child link="link_southLens"/>
+    <joint name="joint_wescambody_weslens" type="revolute">
+        <origin rpy="0 0 0" xyz="${L_CAMBODY/2+L_LENS/2} 0 0"/>
+        <parent link="link_westCameraBody"/>
+        <child link="link_westLens"/>
         <limit effort="0" lower="0" upper="0" velocity="0"/>
         <axis rpy="0 0 0" xyz="0 0 1"/>
     </joint>
 
-    <link name="link_southLens">
+    <link name="link_westLens">
         <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
             <geometry>
                 <cylinder length="${L_LENS}" radius="${R_LENS}"/>
             </geometry>
             <material name="black"/>
         </visual>
         <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
             <geometry>
                 <cylinder length="${L_LENS}" radius="${R_LENS}"/>
             </geometry>
         </collision>
         <inertial>
             <mass value="${M_LENS}"/>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
             <inertia ixx="${1/12*M_LENS*(3*R_LENS*R_LENS+L_LENS*L_LENS)}" ixy="0" ixz="0" iyy="${1/12*M_LENS*(3*R_LENS*R_LENS+L_LENS*L_LENS)}" iyz="0" izz="${1/2*M_LENS*R_LENS*R_LENS}"/>
         </inertial>
     </link>
-    <!-- rotate optical link, x axis should be pointing to the view-->
-    <joint name="joint_soulens_souopt" type="fixed">
-      <origin xyz="0 0 0" rpy="${-PI/2} ${-PI/2} ${PI/2}"/>
-      <parent link="link_southLens"/>
-      <child link="link_southOptical"/>
+    <!-- rotate west optical link, x axis should be pointing to the view-->
+    <joint name="joint_weslens_wesopt" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="link_westLens"/>
+      <child link="link_westOptical"/>
     </joint>
-    <link name="link_southOptical">
+    <link name="link_westOptical">
     </link>
 
     <joint name="joint_base_eastpin" type="revolute">
