@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot>
   <!-- camera -->
-  <gazebo reference="link_optical">
+  <gazebo reference="link_southOptical">
     <sensor type="camera" name="camera1">
       <update_rate>30.0</update_rate>
       <camera name="rgb">
@@ -30,7 +30,7 @@
         <cameraName>cable_joint/rgb_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>link_optical</frameName>
+        <frameName>link_southOptical</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
@@ -61,11 +61,11 @@
   </gazebo>
 
 
-  <gazebo reference="link_lens">
+  <gazebo reference="link_southLens">
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="link_cameraBody">
+  <gazebo reference="link_southCameraBody">
     <material>Gazebo/Red</material>
   </gazebo>
 
