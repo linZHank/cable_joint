@@ -82,6 +82,46 @@
     </sensor>
   </gazebo>
 
+  <!-- north camera -->
+  <gazebo reference="link_northOptical">
+    <sensor type="camera" name="camera3">
+      <update_rate>30.0</update_rate>
+      <camera name="rgb_north">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>cable_joint/rgb_camera_north</cameraName>
+        <imageTopicName>north_image_raw</imageTopicName>
+        <cameraInfoTopicName>north_camera_info</cameraInfoTopicName>
+        <frameName>link_northOptical</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
 
   <gazebo>
     <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
@@ -116,6 +156,14 @@
   </gazebo>
 
   <gazebo reference="link_westCameraBody">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="link_northLens">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="link_northCameraBody">
     <material>Gazebo/Red</material>
   </gazebo>
 
