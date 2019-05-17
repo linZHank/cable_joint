@@ -38,12 +38,12 @@ class CableTester(object):
     self.vec_secube_eastpin = self.eastpin_position - self.secube_position
     # rostopic related
     self.rate = rospy.Rate(100)
-    self.ne_publisher = rospy.Publisher("force_northeast", Wrench, queue_size=1)  
-    self.nw_publisher = rospy.Publisher("force_northwest", Wrench, queue_size=1)  
-    self.sw_publisher = rospy.Publisher("force_southwest", Wrench, queue_size=1)  
+    self.ne_publisher = rospy.Publisher("force_northeast", Wrench, queue_size=1)
+    self.nw_publisher = rospy.Publisher("force_northwest", Wrench, queue_size=1)
+    self.sw_publisher = rospy.Publisher("force_southwest", Wrench, queue_size=1)
     self.se_publisher = rospy.Publisher("force_southeast", Wrench, queue_size=1)
     rospy.Subscriber("/gazebo/link_states", LinkStates, self.link_states_cb)
-    
+
   def apply_force(self, force_array):
     # clean force array
     assert len(force_array)==4
@@ -68,15 +68,15 @@ class CableTester(object):
     # self.ne_publisher.publish(zero_force)
     # self.nw_publisher.publish(zero_force)
     # self.sw_publisher.publish(zero_force)
-    # self.se_publisher.publish(zero_force)  
-      
+    # self.se_publisher.publish(zero_force)
+
   def link_states_cb(self, data):
-    id_eastpin = data.name.index("cable_joint::link_pin_east")
-    id_westpin = data.name.index("cable_joint::link_pin_west")
-    id_necube = data.name.index("cable_joint::link_cube_northeast")
-    id_nwcube = data.name.index("cable_joint::link_cube_northwest")
-    id_swcube = data.name.index("cable_joint::link_cube_southwest")
-    id_secube = data.name.index("cable_joint::link_cube_southeast")
+    id_eastpin = data.name.index("cable_joint::link_eastPin")
+    id_westpin = data.name.index("cable_joint::link_westPin")
+    id_necube = data.name.index("cable_joint::link_northeastCube")
+    id_nwcube = data.name.index("cable_joint::link_northwestCube")
+    id_swcube = data.name.index("cable_joint::link_southwestCube")
+    id_secube = data.name.index("cable_joint::link_southeastCube")
     # get pins and cubes position
     self.eastpin_position = position_to_array(data.pose[id_eastpin].position)
     self.westpin_position = position_to_array(data.pose[id_westpin].position)
@@ -89,7 +89,7 @@ class CableTester(object):
     self.vec_nwcube_westpin = self.westpin_position - self.nwcube_position
     self.vec_swcube_westpin = self.westpin_position - self.swcube_position
     self.vec_secube_eastpin = self.eastpin_position - self.secube_position
-        
+
 
 if __name__ == '__main__':
   reset_world = rospy.ServiceProxy('/gazebo/reset_world', Empty)
@@ -104,13 +104,10 @@ if __name__ == '__main__':
   force = np.zeros(4)
   for i in range(100):
     force = np.random.randn(4)
+    # force = np.zeros(4) +1
     tester.apply_force(force)
     rospy.logdebug("iter:{}, force: {}".format(i, force))
 
   reset_simulation()
   tester.apply_force(np.zeros(4))
   rospy.logwarn("Cable Joint Test Complete!")
-  
-  
-
-    
